@@ -79,9 +79,7 @@ void InternetRadioWatcher::OnAnnounce(
             AllJoynHelpers::MultibyteToPlatformString(name),
             AllJoynHelpers::GetObjectPath(objectDescription, "com.microsoft.maker.InternetRadio"),
             port);
-        AllJoynHelpers::DispatchEvent([=]() {
-            Added(this, args);
-        });
+        Added(this, args);
     }
     alljoyn_aboutobjectdescription_destroy(objectDescription);
 }
@@ -141,7 +139,5 @@ void InternetRadioWatcher::Stop()
 void InternetRadioWatcher::StopInternal(int32 status)
 {
     UnregisterFromBus();
-    AllJoynHelpers::DispatchEvent([=]() {
-        Stopped(this, ref new AllJoynProducerStoppedEventArgs(status));
-    });
+    Stopped(this, ref new AllJoynProducerStoppedEventArgs(status));
 }

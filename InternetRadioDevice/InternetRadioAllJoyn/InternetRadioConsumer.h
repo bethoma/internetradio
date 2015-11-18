@@ -28,10 +28,10 @@ public interface class IInternetRadioConsumer
     event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionLostEventArgs^>^ SessionLost;
     event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberAddedEventArgs^>^ SessionMemberAdded;
     event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberRemovedEventArgs^>^ SessionMemberRemoved;
-    event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ CurrentlyPlayingChanged;
-    event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PowerChanged;
-    event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PresetsChanged;
     event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ VolumeChanged;
+    event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ CurrentlyPlayingChanged;
+    event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PresetsChanged;
+    event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PowerChanged;
 };
 
 public ref class InternetRadioConsumer sealed  : [Windows::Foundation::Metadata::Default] IInternetRadioConsumer
@@ -46,47 +46,126 @@ public:
     // in the Added callback on the Watcher.
     static Windows::Foundation::IAsyncOperation<InternetRadioJoinSessionResult^>^ JoinSessionAsync(_In_ Windows::Devices::AllJoyn::AllJoynServiceInfo^ serviceInfo, _Inout_ InternetRadioWatcher^ watcher);
 
-    // Call the AddPreset method
-    Windows::Foundation::IAsyncOperation<InternetRadioAddPresetResult^>^ AddPresetAsync(_In_ Platform::String^ interfaceMemberPresetName, _In_ Platform::String^ interfaceMemberPresetAddress);
     // Call the NextPreset method
     Windows::Foundation::IAsyncOperation<InternetRadioNextPresetResult^>^ NextPresetAsync();
-    // Call the PlayPreset method
-    Windows::Foundation::IAsyncOperation<InternetRadioPlayPresetResult^>^ PlayPresetAsync(_In_ Platform::String^ interfaceMemberPresetName);
     // Call the PreviousPreset method
     Windows::Foundation::IAsyncOperation<InternetRadioPreviousPresetResult^>^ PreviousPresetAsync();
+    // Call the AddPreset method
+    Windows::Foundation::IAsyncOperation<InternetRadioAddPresetResult^>^ AddPresetAsync(_In_ Platform::String^ interfaceMemberPresetName, _In_ Platform::String^ interfaceMemberPresetAddress);
     // Call the RemovePreset method
     Windows::Foundation::IAsyncOperation<InternetRadioRemovePresetResult^>^ RemovePresetAsync(_In_ Platform::String^ interfaceMemberPresetName);
-    // This event fires whenever the value of CurrentlyPlaying changes.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ CurrentlyPlayingChanged;
-    
-    // Get the value of the CurrentlyPlaying property.
-    Windows::Foundation::IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ GetCurrentlyPlayingAsync();
-
-    // This event fires whenever the value of Power changes.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PowerChanged;
-    
-    // Get the value of the Power property.
-    Windows::Foundation::IAsyncOperation<InternetRadioGetPowerResult^>^ GetPowerAsync();
-
-    // Set the value of the Power property.
-    Windows::Foundation::IAsyncOperation<InternetRadioSetPowerResult^>^ SetPowerAsync(_In_ bool value);
-    // This event fires whenever the value of Presets changes.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PresetsChanged;
-    
-    // Get the value of the Presets property.
-    Windows::Foundation::IAsyncOperation<InternetRadioGetPresetsResult^>^ GetPresetsAsync();
+    // Call the PlayPreset method
+    Windows::Foundation::IAsyncOperation<InternetRadioPlayPresetResult^>^ PlayPresetAsync(_In_ Platform::String^ interfaceMemberPresetName);
+    // Call the MakeAnnouncement method
+    Windows::Foundation::IAsyncOperation<InternetRadioMakeAnnouncementResult^>^ MakeAnnouncementAsync(_In_ Platform::String^ interfaceMemberAnnouncementText);
 
     // Get the value of the Version property.
     Windows::Foundation::IAsyncOperation<InternetRadioGetVersionResult^>^ GetVersionAsync();
 
     // This event fires whenever the value of Volume changes.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ VolumeChanged;
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ VolumeChanged 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ handler) 
+        { 
+            return _VolumeChanged += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Platform::Object^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _VolumeChanged -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Platform::Object^ args) 
+        { 
+            _VolumeChanged(sender, args);
+        } 
+    }
     
     // Get the value of the Volume property.
     Windows::Foundation::IAsyncOperation<InternetRadioGetVolumeResult^>^ GetVolumeAsync();
 
     // Set the value of the Volume property.
     Windows::Foundation::IAsyncOperation<InternetRadioSetVolumeResult^>^ SetVolumeAsync(_In_ double value);
+    // This event fires whenever the value of CurrentlyPlaying changes.
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ CurrentlyPlayingChanged 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ handler) 
+        { 
+            return _CurrentlyPlayingChanged += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Platform::Object^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _CurrentlyPlayingChanged -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Platform::Object^ args) 
+        { 
+            _CurrentlyPlayingChanged(sender, args);
+        } 
+    }
+    
+    // Get the value of the CurrentlyPlaying property.
+    Windows::Foundation::IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ GetCurrentlyPlayingAsync();
+
+    // This event fires whenever the value of Presets changes.
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PresetsChanged 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ handler) 
+        { 
+            return _PresetsChanged += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Platform::Object^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _PresetsChanged -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Platform::Object^ args) 
+        { 
+            _PresetsChanged(sender, args);
+        } 
+    }
+    
+    // Get the value of the Presets property.
+    Windows::Foundation::IAsyncOperation<InternetRadioGetPresetsResult^>^ GetPresetsAsync();
+
+    // This event fires whenever the value of Power changes.
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ PowerChanged 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Platform::Object^>^ handler) 
+        { 
+            return _PowerChanged += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Platform::Object^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _PowerChanged -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Platform::Object^ args) 
+        { 
+            _PowerChanged(sender, args);
+        } 
+    }
+    
+    // Get the value of the Power property.
+    Windows::Foundation::IAsyncOperation<InternetRadioGetPowerResult^>^ GetPowerAsync();
+
+    // Set the value of the Power property.
+    Windows::Foundation::IAsyncOperation<InternetRadioSetPowerResult^>^ SetPowerAsync(_In_ bool value);
 
     // Used to send signals or register functions to handle received signals.
     property InternetRadioSignals^ Signals
@@ -95,13 +174,70 @@ public:
     }
 
     // This event will fire whenever the consumer loses the session that it is a member of.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionLostEventArgs^>^ SessionLost;
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionLostEventArgs^>^ SessionLost 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionLostEventArgs^>^ handler) 
+        { 
+            return _SessionLost += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Windows::Devices::AllJoyn::AllJoynSessionLostEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _SessionLost -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Windows::Devices::AllJoyn::AllJoynSessionLostEventArgs^ args) 
+        { 
+            _SessionLost(sender, args);
+        } 
+    }
 
     // This event will fire whenever a member joins the session.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberAddedEventArgs^>^ SessionMemberAdded;
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberAddedEventArgs^>^ SessionMemberAdded 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberAddedEventArgs^>^ handler) 
+        { 
+            return _SessionMemberAdded += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Windows::Devices::AllJoyn::AllJoynSessionMemberAddedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _SessionMemberAdded -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Windows::Devices::AllJoyn::AllJoynSessionMemberAddedEventArgs^ args) 
+        { 
+            _SessionMemberAdded(sender, args);
+        } 
+    }
 
     // This event will fire whenever a member leaves the session.
-    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberRemovedEventArgs^>^ SessionMemberRemoved;
+    virtual event Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberRemovedEventArgs^>^ SessionMemberRemoved 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioConsumer^, Windows::Devices::AllJoyn::AllJoynSessionMemberRemovedEventArgs^>^ handler) 
+        { 
+            return _SessionMemberRemoved += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioConsumer^>(sender), safe_cast<Windows::Devices::AllJoyn::AllJoynSessionMemberRemovedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _SessionMemberRemoved -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioConsumer^ sender, Windows::Devices::AllJoyn::AllJoynSessionMemberRemovedEventArgs^ args) 
+        { 
+            _SessionMemberRemoved(sender, args);
+        } 
+    }
 
 internal:
     // Consumers do not support property get.
@@ -154,6 +290,14 @@ internal:
     }
     
 private:
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _SessionLost;
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _SessionMemberAdded;
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _SessionMemberRemoved;
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _VolumeChanged;
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _CurrentlyPlayingChanged;
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _PresetsChanged;
+    virtual event Windows::Foundation::EventHandler<Platform::Object^>^ _PowerChanged;
+
     int32 JoinSession(_In_ Windows::Devices::AllJoyn::AllJoynServiceInfo^ serviceInfo);
 
     // Register a callback function to handle incoming signals.

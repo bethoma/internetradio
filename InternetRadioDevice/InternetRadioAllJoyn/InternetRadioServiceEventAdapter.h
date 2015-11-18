@@ -30,38 +30,312 @@ public ref class InternetRadioServiceEventAdapter sealed : [Windows::Foundation:
 {
 public:
     // Method Invocation Events
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioAddPresetCalledEventArgs^>^ AddPresetCalled;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioNextPresetCalledEventArgs^>^ NextPresetCalled;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioPlayPresetCalledEventArgs^>^ PlayPresetCalled;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioPreviousPresetCalledEventArgs^>^ PreviousPresetCalled;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioRemovePresetCalledEventArgs^>^ RemovePresetCalled;
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioNextPresetCalledEventArgs^>^ NextPresetCalled 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioNextPresetCalledEventArgs^>^ handler) 
+        { 
+            return _NextPresetCalled += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioNextPresetCalledEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _NextPresetCalled -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioNextPresetCalledEventArgs^ args) 
+        { 
+            _NextPresetCalled(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioPreviousPresetCalledEventArgs^>^ PreviousPresetCalled 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioPreviousPresetCalledEventArgs^>^ handler) 
+        { 
+            return _PreviousPresetCalled += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioPreviousPresetCalledEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _PreviousPresetCalled -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioPreviousPresetCalledEventArgs^ args) 
+        { 
+            _PreviousPresetCalled(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioAddPresetCalledEventArgs^>^ AddPresetCalled 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioAddPresetCalledEventArgs^>^ handler) 
+        { 
+            return _AddPresetCalled += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioAddPresetCalledEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _AddPresetCalled -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioAddPresetCalledEventArgs^ args) 
+        { 
+            _AddPresetCalled(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioRemovePresetCalledEventArgs^>^ RemovePresetCalled 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioRemovePresetCalledEventArgs^>^ handler) 
+        { 
+            return _RemovePresetCalled += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioRemovePresetCalledEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _RemovePresetCalled -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioRemovePresetCalledEventArgs^ args) 
+        { 
+            _RemovePresetCalled(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioPlayPresetCalledEventArgs^>^ PlayPresetCalled 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioPlayPresetCalledEventArgs^>^ handler) 
+        { 
+            return _PlayPresetCalled += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioPlayPresetCalledEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _PlayPresetCalled -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioPlayPresetCalledEventArgs^ args) 
+        { 
+            _PlayPresetCalled(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioMakeAnnouncementCalledEventArgs^>^ MakeAnnouncementCalled 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioMakeAnnouncementCalledEventArgs^>^ handler) 
+        { 
+            return _MakeAnnouncementCalled += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioMakeAnnouncementCalledEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _MakeAnnouncementCalled -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioMakeAnnouncementCalledEventArgs^ args) 
+        { 
+            _MakeAnnouncementCalled(sender, args);
+        } 
+    }
 
     // Property Read Events
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetCurrentlyPlayingRequestedEventArgs^>^ GetCurrentlyPlayingRequested;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetPowerRequestedEventArgs^>^ GetPowerRequested;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetPresetsRequestedEventArgs^>^ GetPresetsRequested;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetVersionRequestedEventArgs^>^ GetVersionRequested;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetVolumeRequestedEventArgs^>^ GetVolumeRequested;
-    
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetVersionRequestedEventArgs^>^ GetVersionRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetVersionRequestedEventArgs^>^ handler) 
+        { 
+            return _GetVersionRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioGetVersionRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _GetVersionRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioGetVersionRequestedEventArgs^ args) 
+        { 
+            _GetVersionRequested(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetVolumeRequestedEventArgs^>^ GetVolumeRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetVolumeRequestedEventArgs^>^ handler) 
+        { 
+            return _GetVolumeRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioGetVolumeRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _GetVolumeRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioGetVolumeRequestedEventArgs^ args) 
+        { 
+            _GetVolumeRequested(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetCurrentlyPlayingRequestedEventArgs^>^ GetCurrentlyPlayingRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetCurrentlyPlayingRequestedEventArgs^>^ handler) 
+        { 
+            return _GetCurrentlyPlayingRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioGetCurrentlyPlayingRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _GetCurrentlyPlayingRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioGetCurrentlyPlayingRequestedEventArgs^ args) 
+        { 
+            _GetCurrentlyPlayingRequested(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetPresetsRequestedEventArgs^>^ GetPresetsRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetPresetsRequestedEventArgs^>^ handler) 
+        { 
+            return _GetPresetsRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioGetPresetsRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _GetPresetsRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioGetPresetsRequestedEventArgs^ args) 
+        { 
+            _GetPresetsRequested(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetPowerRequestedEventArgs^>^ GetPowerRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioGetPowerRequestedEventArgs^>^ handler) 
+        { 
+            return _GetPowerRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioGetPowerRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _GetPowerRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioGetPowerRequestedEventArgs^ args) 
+        { 
+            _GetPowerRequested(sender, args);
+        } 
+    }
+
     // Property Write Events
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioSetPowerRequestedEventArgs^>^ SetPowerRequested;
-    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioSetVolumeRequestedEventArgs^>^ SetVolumeRequested;
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioSetVolumeRequestedEventArgs^>^ SetVolumeRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioSetVolumeRequestedEventArgs^>^ handler) 
+        { 
+            return _SetVolumeRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioSetVolumeRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _SetVolumeRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioSetVolumeRequestedEventArgs^ args) 
+        { 
+            _SetVolumeRequested(sender, args);
+        } 
+    }
+
+    event Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioSetPowerRequestedEventArgs^>^ SetPowerRequested 
+    { 
+        Windows::Foundation::EventRegistrationToken add(Windows::Foundation::TypedEventHandler<InternetRadioServiceEventAdapter^, InternetRadioSetPowerRequestedEventArgs^>^ handler) 
+        { 
+            return _SetPowerRequested += ref new Windows::Foundation::EventHandler<Platform::Object^>
+            ([handler](Platform::Object^ sender, Platform::Object^ args)
+            {
+                handler->Invoke(safe_cast<InternetRadioServiceEventAdapter^>(sender), safe_cast<InternetRadioSetPowerRequestedEventArgs^>(args));
+            }, Platform::CallbackContext::Same);
+        } 
+        void remove(Windows::Foundation::EventRegistrationToken token) 
+        { 
+            _SetPowerRequested -= token; 
+        } 
+    internal: 
+        void raise(InternetRadioServiceEventAdapter^ sender, InternetRadioSetPowerRequestedEventArgs^ args) 
+        { 
+            _SetPowerRequested(sender, args);
+        } 
+    }
 
     // IInternetRadioService Implementation
-    virtual Windows::Foundation::IAsyncOperation<InternetRadioAddPresetResult^>^ AddPresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName, _In_ Platform::String^ interfaceMemberPresetAddress);
     virtual Windows::Foundation::IAsyncOperation<InternetRadioNextPresetResult^>^ NextPresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
-    virtual Windows::Foundation::IAsyncOperation<InternetRadioPlayPresetResult^>^ PlayPresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName);
     virtual Windows::Foundation::IAsyncOperation<InternetRadioPreviousPresetResult^>^ PreviousPresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioAddPresetResult^>^ AddPresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName, _In_ Platform::String^ interfaceMemberPresetAddress);
     virtual Windows::Foundation::IAsyncOperation<InternetRadioRemovePresetResult^>^ RemovePresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioPlayPresetResult^>^ PlayPresetAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioMakeAnnouncementResult^>^ MakeAnnouncementAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberAnnouncementText);
 
-    virtual Windows::Foundation::IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ GetCurrentlyPlayingAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
-    virtual Windows::Foundation::IAsyncOperation<InternetRadioGetPowerResult^>^ GetPowerAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
-    virtual Windows::Foundation::IAsyncOperation<InternetRadioGetPresetsResult^>^ GetPresetsAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
     virtual Windows::Foundation::IAsyncOperation<InternetRadioGetVersionResult^>^ GetVersionAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
     virtual Windows::Foundation::IAsyncOperation<InternetRadioGetVolumeResult^>^ GetVolumeAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ GetCurrentlyPlayingAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioGetPresetsResult^>^ GetPresetsAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioGetPowerResult^>^ GetPowerAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
 
-    virtual Windows::Foundation::IAsyncOperation<InternetRadioSetPowerResult^>^ SetPowerAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ bool value);
     virtual Windows::Foundation::IAsyncOperation<InternetRadioSetVolumeResult^>^ SetVolumeAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ double value);
+    virtual Windows::Foundation::IAsyncOperation<InternetRadioSetPowerResult^>^ SetPowerAsync(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ bool value);
+
+private:
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _NextPresetCalled;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _PreviousPresetCalled;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _AddPresetCalled;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _RemovePresetCalled;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _PlayPresetCalled;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _MakeAnnouncementCalled;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _GetVersionRequested;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _GetVolumeRequested;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _GetCurrentlyPlayingRequested;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _GetPresetsRequested;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _GetPowerRequested;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _SetVolumeRequested;
+    event Windows::Foundation::EventHandler<Platform::Object^>^ _SetPowerRequested;
 };
 
 } } } } 

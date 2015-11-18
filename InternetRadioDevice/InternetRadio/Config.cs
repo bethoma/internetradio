@@ -44,6 +44,12 @@ namespace InternetRadio
             set;
         }
 
+        public string Announcer_AnnouncementPrefix
+        {
+            get;
+            set;
+        }
+
         public static InternetRadioConfig GetDefault()
         {
             return new InternetRadioConfig()
@@ -62,7 +68,8 @@ namespace InternetRadio
                      {
                          Address = @"http://video.ch9.ms/ch9/debd/54ebcbdf-d688-43fc-97ef-cb83162bdebd/2-724.mp3",
                          Name = "CH 9: Build 2015 Presentation"
-                     }
+                     },
+                Announcer_AnnouncementPrefix = "Incoming Announcement"
         };
         }
     }

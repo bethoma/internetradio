@@ -16,8 +16,12 @@ namespace InternetRadio
         private IPlaylistManager playlistManager;
         private IPlaybackManager playbackManager;
         private IDevicePowerManager powerManager;
+        private IAnnouncementManager announcementManager;
 
-        internal AllJoynInterfaceManager(IPlaybackManager playbackManager, IPlaylistManager playlistManager, IDevicePowerManager powerManager)
+        internal AllJoynInterfaceManager(IPlaybackManager playbackManager, 
+                                        IPlaylistManager playlistManager, 
+                                        IDevicePowerManager powerManager, 
+                                        IAnnouncementManager announcementManager)
         {
             this.playbackManager = playbackManager;
             this.playbackManager.VolumeChanged += PlaybackManager_VolumeChanged;
@@ -25,6 +29,7 @@ namespace InternetRadio
             this.playlistManager.CurrentTrackChanged += PlaylistManager_CurrentTrackChanged;
             this.powerManager = powerManager;
             this.powerManager.PowerStateChanged += PowerManager_PowerStateChanged;
+            this.announcementManager = announcementManager;
         }
 
         internal void Initialize()
@@ -195,6 +200,16 @@ namespace InternetRadio
                 this.powerManager.PowerState = (false) ?  PowerState.Standby : PowerState.Powered;
 
                 return InternetRadioSetPowerResult.CreateSuccessResult();
+            }).AsAsyncOperation();
+        }
+
+        public IAsyncOperation<InternetRadioMakeAnnouncementResult> MakeAnnouncementAsync(AllJoynMessageInfo info, string interfaceMemberAnnouncementText)
+        {
+            return Task.Run(() =>
+            {
+                TelemetryManager.WriteTelemetryEvent("Action_AllJoyn");
+                this.announcementManager.MakeAnnouncement(interfaceMemberAnnouncementText);
+                return InternetRadioMakeAnnouncementResult.CreateSuccessResult();
             }).AsAsyncOperation();
         }
     }

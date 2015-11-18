@@ -21,38 +21,11 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+using namespace concurrency;
+
 namespace com { namespace microsoft { namespace maker { namespace InternetRadio {
 
 ref class InternetRadioConsumer;
-
-public ref class InternetRadioAddPresetResult sealed
-{
-public:
-    property int32 Status
-    {
-        int32 get() { return m_status; }
-    internal:
-        void set(_In_ int32 value) { m_status = value; }
-    }
-
-    
-    static InternetRadioAddPresetResult^ CreateSuccessResult()
-    {
-        auto result = ref new InternetRadioAddPresetResult();
-        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
-        return result;
-    }
-    
-    static InternetRadioAddPresetResult^ CreateFailureResult(_In_ int32 status)
-    {
-        auto result = ref new InternetRadioAddPresetResult();
-        result->Status = status;
-        return result;
-    }
-
-private:
-    int32 m_status;
-};
 
 public ref class InternetRadioNextPresetResult sealed
 {
@@ -69,6 +42,7 @@ public:
     {
         auto result = ref new InternetRadioNextPresetResult();
         result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
         return result;
     }
     
@@ -78,35 +52,8 @@ public:
         result->Status = status;
         return result;
     }
-
-private:
-    int32 m_status;
-};
-
-public ref class InternetRadioPlayPresetResult sealed
-{
-public:
-    property int32 Status
-    {
-        int32 get() { return m_status; }
-    internal:
-        void set(_In_ int32 value) { m_status = value; }
-    }
-
-    
-    static InternetRadioPlayPresetResult^ CreateSuccessResult()
-    {
-        auto result = ref new InternetRadioPlayPresetResult();
-        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
-        return result;
-    }
-    
-    static InternetRadioPlayPresetResult^ CreateFailureResult(_In_ int32 status)
-    {
-        auto result = ref new InternetRadioPlayPresetResult();
-        result->Status = status;
-        return result;
-    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
 
 private:
     int32 m_status;
@@ -127,6 +74,7 @@ public:
     {
         auto result = ref new InternetRadioPreviousPresetResult();
         result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
         return result;
     }
     
@@ -136,6 +84,40 @@ public:
         result->Status = status;
         return result;
     }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+};
+
+public ref class InternetRadioAddPresetResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    
+    static InternetRadioAddPresetResult^ CreateSuccessResult()
+    {
+        auto result = ref new InternetRadioAddPresetResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+    
+    static InternetRadioAddPresetResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioAddPresetResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
 
 private:
     int32 m_status;
@@ -156,6 +138,7 @@ public:
     {
         auto result = ref new InternetRadioRemovePresetResult();
         result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
         return result;
     }
     
@@ -165,6 +148,72 @@ public:
         result->Status = status;
         return result;
     }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+};
+
+public ref class InternetRadioPlayPresetResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    
+    static InternetRadioPlayPresetResult^ CreateSuccessResult()
+    {
+        auto result = ref new InternetRadioPlayPresetResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+    
+    static InternetRadioPlayPresetResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioPlayPresetResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+};
+
+public ref class InternetRadioMakeAnnouncementResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    
+    static InternetRadioMakeAnnouncementResult^ CreateSuccessResult()
+    {
+        auto result = ref new InternetRadioMakeAnnouncementResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+    
+    static InternetRadioMakeAnnouncementResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioMakeAnnouncementResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
 
 private:
     int32 m_status;
@@ -192,145 +241,6 @@ private:
     InternetRadioConsumer^ m_consumer;
 };
 
-public ref class InternetRadioGetCurrentlyPlayingResult sealed
-{
-public:
-    property int32 Status
-    {
-        int32 get() { return m_status; }
-    internal:
-        void set(_In_ int32 value) { m_status = value; }
-    }
-
-    property Platform::String^ CurrentlyPlaying
-    {
-        Platform::String^ get() { return m_value; }
-    internal:
-        void set(_In_ Platform::String^ value) { m_value = value; }
-    }
-
-    static InternetRadioGetCurrentlyPlayingResult^ CreateSuccessResult(_In_ Platform::String^ value)
-    {
-        auto result = ref new InternetRadioGetCurrentlyPlayingResult();
-        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
-        result->CurrentlyPlaying = value;
-        return result;
-    }
-
-    static InternetRadioGetCurrentlyPlayingResult^ CreateFailureResult(_In_ int32 status)
-    {
-        auto result = ref new InternetRadioGetCurrentlyPlayingResult();
-        result->Status = status;
-        return result;
-    }
-
-private:
-    int32 m_status;
-    Platform::String^ m_value;
-};
-
-public ref class InternetRadioGetPowerResult sealed
-{
-public:
-    property int32 Status
-    {
-        int32 get() { return m_status; }
-    internal:
-        void set(_In_ int32 value) { m_status = value; }
-    }
-
-    property bool Power
-    {
-        bool get() { return m_value; }
-    internal:
-        void set(_In_ bool value) { m_value = value; }
-    }
-
-    static InternetRadioGetPowerResult^ CreateSuccessResult(_In_ bool value)
-    {
-        auto result = ref new InternetRadioGetPowerResult();
-        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
-        result->Power = value;
-        return result;
-    }
-
-    static InternetRadioGetPowerResult^ CreateFailureResult(_In_ int32 status)
-    {
-        auto result = ref new InternetRadioGetPowerResult();
-        result->Status = status;
-        return result;
-    }
-
-private:
-    int32 m_status;
-    bool m_value;
-};
-
-public ref class InternetRadioSetPowerResult sealed
-{
-public:
-    property int32 Status
-    {
-        int32 get() { return m_status; }
-    internal:
-        void set(_In_ int32 value) { m_status = value; }
-    }
-
-    static InternetRadioSetPowerResult^ CreateSuccessResult()
-    {
-        auto result = ref new InternetRadioSetPowerResult();
-        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
-        return result;
-    }
-
-    static InternetRadioSetPowerResult^ CreateFailureResult(_In_ int32 status)
-    {
-        auto result = ref new InternetRadioSetPowerResult();
-        result->Status = status;
-        return result;
-    }
-
-private:
-    int32 m_status;
-};
-
-public ref class InternetRadioGetPresetsResult sealed
-{
-public:
-    property int32 Status
-    {
-        int32 get() { return m_status; }
-    internal:
-        void set(_In_ int32 value) { m_status = value; }
-    }
-
-    property Platform::String^ Presets
-    {
-        Platform::String^ get() { return m_value; }
-    internal:
-        void set(_In_ Platform::String^ value) { m_value = value; }
-    }
-
-    static InternetRadioGetPresetsResult^ CreateSuccessResult(_In_ Platform::String^ value)
-    {
-        auto result = ref new InternetRadioGetPresetsResult();
-        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
-        result->Presets = value;
-        return result;
-    }
-
-    static InternetRadioGetPresetsResult^ CreateFailureResult(_In_ int32 status)
-    {
-        auto result = ref new InternetRadioGetPresetsResult();
-        result->Status = status;
-        return result;
-    }
-
-private:
-    int32 m_status;
-    Platform::String^ m_value;
-};
-
 public ref class InternetRadioGetVersionResult sealed
 {
 public:
@@ -353,6 +263,7 @@ public:
         auto result = ref new InternetRadioGetVersionResult();
         result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
         result->Version = value;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
         return result;
     }
 
@@ -362,6 +273,8 @@ public:
         result->Status = status;
         return result;
     }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
 
 private:
     int32 m_status;
@@ -390,6 +303,7 @@ public:
         auto result = ref new InternetRadioGetVolumeResult();
         result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
         result->Volume = value;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
         return result;
     }
 
@@ -399,6 +313,8 @@ public:
         result->Status = status;
         return result;
     }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
 
 private:
     int32 m_status;
@@ -419,6 +335,7 @@ public:
     {
         auto result = ref new InternetRadioSetVolumeResult();
         result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
         return result;
     }
 
@@ -428,6 +345,159 @@ public:
         result->Status = status;
         return result;
     }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+};
+
+public ref class InternetRadioGetCurrentlyPlayingResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    property Platform::String^ CurrentlyPlaying
+    {
+        Platform::String^ get() { return m_value; }
+    internal:
+        void set(_In_ Platform::String^ value) { m_value = value; }
+    }
+
+    static InternetRadioGetCurrentlyPlayingResult^ CreateSuccessResult(_In_ Platform::String^ value)
+    {
+        auto result = ref new InternetRadioGetCurrentlyPlayingResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->CurrentlyPlaying = value;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+
+    static InternetRadioGetCurrentlyPlayingResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioGetCurrentlyPlayingResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+    Platform::String^ m_value;
+};
+
+public ref class InternetRadioGetPresetsResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    property Platform::String^ Presets
+    {
+        Platform::String^ get() { return m_value; }
+    internal:
+        void set(_In_ Platform::String^ value) { m_value = value; }
+    }
+
+    static InternetRadioGetPresetsResult^ CreateSuccessResult(_In_ Platform::String^ value)
+    {
+        auto result = ref new InternetRadioGetPresetsResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->Presets = value;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+
+    static InternetRadioGetPresetsResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioGetPresetsResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+    Platform::String^ m_value;
+};
+
+public ref class InternetRadioGetPowerResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    property bool Power
+    {
+        bool get() { return m_value; }
+    internal:
+        void set(_In_ bool value) { m_value = value; }
+    }
+
+    static InternetRadioGetPowerResult^ CreateSuccessResult(_In_ bool value)
+    {
+        auto result = ref new InternetRadioGetPowerResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->Power = value;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+
+    static InternetRadioGetPowerResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioGetPowerResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
+
+private:
+    int32 m_status;
+    bool m_value;
+};
+
+public ref class InternetRadioSetPowerResult sealed
+{
+public:
+    property int32 Status
+    {
+        int32 get() { return m_status; }
+    internal:
+        void set(_In_ int32 value) { m_status = value; }
+    }
+
+    static InternetRadioSetPowerResult^ CreateSuccessResult()
+    {
+        auto result = ref new InternetRadioSetPowerResult();
+        result->Status = Windows::Devices::AllJoyn::AllJoynStatus::Ok;
+        result->m_creationContext = Concurrency::task_continuation_context::use_current();
+        return result;
+    }
+
+    static InternetRadioSetPowerResult^ CreateFailureResult(_In_ int32 status)
+    {
+        auto result = ref new InternetRadioSetPowerResult();
+        result->Status = status;
+        return result;
+    }
+internal:
+    Concurrency::task_continuation_context m_creationContext = Concurrency::task_continuation_context::use_default();
 
 private:
     int32 m_status;

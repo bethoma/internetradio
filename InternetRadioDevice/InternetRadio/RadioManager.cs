@@ -15,6 +15,7 @@ namespace InternetRadio
         private IPlaybackManager radioPlaybackManager;
         private IDevicePowerManager radioPowerManager;
         private ITextDisplay display;
+        private IAnnouncementManager announcementManager;
         private ResourceLoader resourceLoader;
 
         private AllJoynInterfaceManager allJoynInterfaceManager;
@@ -50,10 +51,13 @@ namespace InternetRadio
                 this.radioPlaybackManager.PlaybackStateChanged += RadioPlaybackManager_PlaybackStateChanged;
                 await this.radioPlaybackManager.InitialzeAsync();
 
+                this.announcementManager = new AnnouncementManager();
+                await this.announcementManager.Initialize(this.radioPlaybackManager, this.config.Announcer_AnnouncementPrefix);
+
                 // Initialize the input managers
 
                 // AllJoyn
-                this.allJoynInterfaceManager = new AllJoynInterfaceManager(this.radioPlaybackManager, this.radioPresetManager, this.radioPowerManager);
+                this.allJoynInterfaceManager = new AllJoynInterfaceManager(this.radioPlaybackManager, this.radioPresetManager, this.radioPowerManager, this.announcementManager);
                 this.allJoynInterfaceManager.Initialize();
 
                 // GPIO
@@ -115,6 +119,8 @@ namespace InternetRadio
                 }
 
                 TelemetryManager.WriteTelemetryEvent("App_Initialize", telemetryInitializeProperties);
+
+                await this.announcementManager.MakeAnnouncement("Initialization complete!");
             }).AsAsyncAction();
         }
 

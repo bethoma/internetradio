@@ -39,6 +39,7 @@ private:
     alljoyn_busobject m_busObject;
     alljoyn_sessionid m_sessionId;
 
+
 };
 
 } } } } 

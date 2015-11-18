@@ -26,6 +26,10 @@
       <description language="en">Plays the given preset</description>
       <arg name="presetName" type="s" direction="in"/>
     </method>
+    <method name="MakeAnnouncement">
+      <description language="en"></description>
+      <arg name="announcementText" type="s" direction="in"/>
+    </method>
     <property name="Volume" type="d" access="readwrite">
       <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
       <description language="en">Volume level of the device</description>

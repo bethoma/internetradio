@@ -31,85 +31,6 @@ using namespace com::microsoft::maker::InternetRadio;
 namespace com { namespace microsoft { namespace maker { namespace InternetRadio {
 
 // Methods
-InternetRadioAddPresetCalledEventArgs::InternetRadioAddPresetCalledEventArgs(
-    _In_ AllJoynMessageInfo^ info,
-    _In_ Platform::String^ interfaceMemberPresetName,
-    _In_ Platform::String^ interfaceMemberPresetAddress)
-    : m_raised(false),
-    m_completionsRequired(0),
-    m_messageInfo(info),
-    m_interfaceMemberPresetName(interfaceMemberPresetName),
-    m_interfaceMemberPresetAddress(interfaceMemberPresetAddress)
-{
-	m_result = InternetRadioAddPresetResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
-}
-
-Deferral^ InternetRadioAddPresetCalledEventArgs::GetDeferral()
-{
-    std::lock_guard<std::mutex> lockGuard(m_lock);
-    if (m_raised)
-    {
-        // Cannot ask for a deferral after the event handler has returned.
-        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-    }
-
-    m_completionsRequired++;
-    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioAddPresetCalledEventArgs::Complete);
-    return ref new Deferral(handler);
-}
-
-void InternetRadioAddPresetCalledEventArgs::InvokeAllFinished()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        m_raised = true;
-        invokeNeeded = (m_completionsRequired == 0);
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioAddPresetCalledEventArgs::Complete()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        if (m_completionsRequired == 0)
-        {
-            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
-            // which will only invoke our completion handler once.
-            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-        }
-        m_completionsRequired--;
-        invokeNeeded = (m_raised && (m_completionsRequired == 0));
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioAddPresetCalledEventArgs::InvokeCompleteHandler()
-{
-    if (m_result->Status == ER_NOT_IMPLEMENTED)
-    {
-        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for AddPresetCalled.");
-    }
-    else
-    {
-        m_tce.set(m_result);
-    }
-}
-
 InternetRadioNextPresetCalledEventArgs::InternetRadioNextPresetCalledEventArgs(
     _In_ AllJoynMessageInfo^ info)
     : m_raised(false),
@@ -185,83 +106,6 @@ void InternetRadioNextPresetCalledEventArgs::InvokeCompleteHandler()
     }
 }
 
-InternetRadioPlayPresetCalledEventArgs::InternetRadioPlayPresetCalledEventArgs(
-    _In_ AllJoynMessageInfo^ info,
-    _In_ Platform::String^ interfaceMemberPresetName)
-    : m_raised(false),
-    m_completionsRequired(0),
-    m_messageInfo(info),
-    m_interfaceMemberPresetName(interfaceMemberPresetName)
-{
-	m_result = InternetRadioPlayPresetResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
-}
-
-Deferral^ InternetRadioPlayPresetCalledEventArgs::GetDeferral()
-{
-    std::lock_guard<std::mutex> lockGuard(m_lock);
-    if (m_raised)
-    {
-        // Cannot ask for a deferral after the event handler has returned.
-        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-    }
-
-    m_completionsRequired++;
-    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioPlayPresetCalledEventArgs::Complete);
-    return ref new Deferral(handler);
-}
-
-void InternetRadioPlayPresetCalledEventArgs::InvokeAllFinished()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        m_raised = true;
-        invokeNeeded = (m_completionsRequired == 0);
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioPlayPresetCalledEventArgs::Complete()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        if (m_completionsRequired == 0)
-        {
-            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
-            // which will only invoke our completion handler once.
-            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-        }
-        m_completionsRequired--;
-        invokeNeeded = (m_raised && (m_completionsRequired == 0));
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioPlayPresetCalledEventArgs::InvokeCompleteHandler()
-{
-    if (m_result->Status == ER_NOT_IMPLEMENTED)
-    {
-        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for PlayPresetCalled.");
-    }
-    else
-    {
-        m_tce.set(m_result);
-    }
-}
-
 InternetRadioPreviousPresetCalledEventArgs::InternetRadioPreviousPresetCalledEventArgs(
     _In_ AllJoynMessageInfo^ info)
     : m_raised(false),
@@ -330,6 +174,85 @@ void InternetRadioPreviousPresetCalledEventArgs::InvokeCompleteHandler()
     if (m_result->Status == ER_NOT_IMPLEMENTED)
     {
         throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for PreviousPresetCalled.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
+InternetRadioAddPresetCalledEventArgs::InternetRadioAddPresetCalledEventArgs(
+    _In_ AllJoynMessageInfo^ info,
+    _In_ Platform::String^ interfaceMemberPresetName,
+    _In_ Platform::String^ interfaceMemberPresetAddress)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info),
+    m_interfaceMemberPresetName(interfaceMemberPresetName),
+    m_interfaceMemberPresetAddress(interfaceMemberPresetAddress)
+{
+	m_result = InternetRadioAddPresetResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ InternetRadioAddPresetCalledEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioAddPresetCalledEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void InternetRadioAddPresetCalledEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioAddPresetCalledEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioAddPresetCalledEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for AddPresetCalled.");
     }
     else
     {
@@ -414,232 +337,161 @@ void InternetRadioRemovePresetCalledEventArgs::InvokeCompleteHandler()
     }
 }
 
+InternetRadioPlayPresetCalledEventArgs::InternetRadioPlayPresetCalledEventArgs(
+    _In_ AllJoynMessageInfo^ info,
+    _In_ Platform::String^ interfaceMemberPresetName)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info),
+    m_interfaceMemberPresetName(interfaceMemberPresetName)
+{
+	m_result = InternetRadioPlayPresetResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ InternetRadioPlayPresetCalledEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioPlayPresetCalledEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void InternetRadioPlayPresetCalledEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioPlayPresetCalledEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioPlayPresetCalledEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for PlayPresetCalled.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
+InternetRadioMakeAnnouncementCalledEventArgs::InternetRadioMakeAnnouncementCalledEventArgs(
+    _In_ AllJoynMessageInfo^ info,
+    _In_ Platform::String^ interfaceMemberAnnouncementText)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info),
+    m_interfaceMemberAnnouncementText(interfaceMemberAnnouncementText)
+{
+	m_result = InternetRadioMakeAnnouncementResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ InternetRadioMakeAnnouncementCalledEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioMakeAnnouncementCalledEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void InternetRadioMakeAnnouncementCalledEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioMakeAnnouncementCalledEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioMakeAnnouncementCalledEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for MakeAnnouncementCalled.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
 // Readable Properties
-InternetRadioGetCurrentlyPlayingRequestedEventArgs::InternetRadioGetCurrentlyPlayingRequestedEventArgs(
-    _In_ AllJoynMessageInfo^ info)
-    : m_raised(false),
-    m_completionsRequired(0),
-    m_messageInfo(info)
-{
-	m_result = InternetRadioGetCurrentlyPlayingResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
-}
-
-Deferral^ InternetRadioGetCurrentlyPlayingRequestedEventArgs::GetDeferral()
-{
-    std::lock_guard<std::mutex> lockGuard(m_lock);
-    if (m_raised)
-    {
-        // Cannot ask for a deferral after the event handler has returned.
-        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-    }
-
-    m_completionsRequired++;
-    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioGetCurrentlyPlayingRequestedEventArgs::Complete);
-    return ref new Deferral(handler);
-}
-
-void InternetRadioGetCurrentlyPlayingRequestedEventArgs::InvokeAllFinished()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        m_raised = true;
-        invokeNeeded = (m_completionsRequired == 0);
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioGetCurrentlyPlayingRequestedEventArgs::Complete()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        if (m_completionsRequired == 0)
-        {
-            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
-            // which will only invoke our completion handler once.
-            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-        }
-        m_completionsRequired--;
-        invokeNeeded = (m_raised && (m_completionsRequired == 0));
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioGetCurrentlyPlayingRequestedEventArgs::InvokeCompleteHandler()
-{
-    if (m_result->Status == ER_NOT_IMPLEMENTED)
-    {
-        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetCurrentlyPlayingRequested.");
-    }
-    else
-    {
-        m_tce.set(m_result);
-    }
-}
-
-InternetRadioGetPowerRequestedEventArgs::InternetRadioGetPowerRequestedEventArgs(
-    _In_ AllJoynMessageInfo^ info)
-    : m_raised(false),
-    m_completionsRequired(0),
-    m_messageInfo(info)
-{
-	m_result = InternetRadioGetPowerResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
-}
-
-Deferral^ InternetRadioGetPowerRequestedEventArgs::GetDeferral()
-{
-    std::lock_guard<std::mutex> lockGuard(m_lock);
-    if (m_raised)
-    {
-        // Cannot ask for a deferral after the event handler has returned.
-        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-    }
-
-    m_completionsRequired++;
-    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioGetPowerRequestedEventArgs::Complete);
-    return ref new Deferral(handler);
-}
-
-void InternetRadioGetPowerRequestedEventArgs::InvokeAllFinished()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        m_raised = true;
-        invokeNeeded = (m_completionsRequired == 0);
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioGetPowerRequestedEventArgs::Complete()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        if (m_completionsRequired == 0)
-        {
-            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
-            // which will only invoke our completion handler once.
-            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-        }
-        m_completionsRequired--;
-        invokeNeeded = (m_raised && (m_completionsRequired == 0));
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioGetPowerRequestedEventArgs::InvokeCompleteHandler()
-{
-    if (m_result->Status == ER_NOT_IMPLEMENTED)
-    {
-        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetPowerRequested.");
-    }
-    else
-    {
-        m_tce.set(m_result);
-    }
-}
-
-InternetRadioGetPresetsRequestedEventArgs::InternetRadioGetPresetsRequestedEventArgs(
-    _In_ AllJoynMessageInfo^ info)
-    : m_raised(false),
-    m_completionsRequired(0),
-    m_messageInfo(info)
-{
-	m_result = InternetRadioGetPresetsResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
-}
-
-Deferral^ InternetRadioGetPresetsRequestedEventArgs::GetDeferral()
-{
-    std::lock_guard<std::mutex> lockGuard(m_lock);
-    if (m_raised)
-    {
-        // Cannot ask for a deferral after the event handler has returned.
-        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-    }
-
-    m_completionsRequired++;
-    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioGetPresetsRequestedEventArgs::Complete);
-    return ref new Deferral(handler);
-}
-
-void InternetRadioGetPresetsRequestedEventArgs::InvokeAllFinished()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        m_raised = true;
-        invokeNeeded = (m_completionsRequired == 0);
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioGetPresetsRequestedEventArgs::Complete()
-{
-    bool invokeNeeded;
-
-    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
-    {
-        std::lock_guard<std::mutex> lockGuard(m_lock);
-        if (m_completionsRequired == 0)
-        {
-            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
-            // which will only invoke our completion handler once.
-            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
-        }
-        m_completionsRequired--;
-        invokeNeeded = (m_raised && (m_completionsRequired == 0));
-    }
-
-    if (invokeNeeded)
-    {
-        InvokeCompleteHandler();
-    }
-}
-
-void InternetRadioGetPresetsRequestedEventArgs::InvokeCompleteHandler()
-{
-    if (m_result->Status == ER_NOT_IMPLEMENTED)
-    {
-        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetPresetsRequested.");
-    }
-    else
-    {
-        m_tce.set(m_result);
-    }
-}
-
 InternetRadioGetVersionRequestedEventArgs::InternetRadioGetVersionRequestedEventArgs(
     _In_ AllJoynMessageInfo^ info)
     : m_raised(false),
@@ -790,19 +642,16 @@ void InternetRadioGetVolumeRequestedEventArgs::InvokeCompleteHandler()
     }
 }
 
-// Writable Properties
-InternetRadioSetPowerRequestedEventArgs::InternetRadioSetPowerRequestedEventArgs(
-    _In_ AllJoynMessageInfo^ info,
-    _In_ bool value)
+InternetRadioGetCurrentlyPlayingRequestedEventArgs::InternetRadioGetCurrentlyPlayingRequestedEventArgs(
+    _In_ AllJoynMessageInfo^ info)
     : m_raised(false),
     m_completionsRequired(0),
-    m_messageInfo(info),
-    m_value(value)
+    m_messageInfo(info)
 {
-	m_result = InternetRadioSetPowerResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+	m_result = InternetRadioGetCurrentlyPlayingResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
 }
 
-Deferral^ InternetRadioSetPowerRequestedEventArgs::GetDeferral()
+Deferral^ InternetRadioGetCurrentlyPlayingRequestedEventArgs::GetDeferral()
 {
     std::lock_guard<std::mutex> lockGuard(m_lock);
     if (m_raised)
@@ -812,11 +661,11 @@ Deferral^ InternetRadioSetPowerRequestedEventArgs::GetDeferral()
     }
 
     m_completionsRequired++;
-    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioSetPowerRequestedEventArgs::Complete);
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioGetCurrentlyPlayingRequestedEventArgs::Complete);
     return ref new Deferral(handler);
 }
 
-void InternetRadioSetPowerRequestedEventArgs::InvokeAllFinished()
+void InternetRadioGetCurrentlyPlayingRequestedEventArgs::InvokeAllFinished()
 {
     bool invokeNeeded;
 
@@ -833,7 +682,7 @@ void InternetRadioSetPowerRequestedEventArgs::InvokeAllFinished()
     }
 }
 
-void InternetRadioSetPowerRequestedEventArgs::Complete()
+void InternetRadioGetCurrentlyPlayingRequestedEventArgs::Complete()
 {
     bool invokeNeeded;
 
@@ -856,11 +705,11 @@ void InternetRadioSetPowerRequestedEventArgs::Complete()
     }
 }
 
-void InternetRadioSetPowerRequestedEventArgs::InvokeCompleteHandler()
+void InternetRadioGetCurrentlyPlayingRequestedEventArgs::InvokeCompleteHandler()
 {
     if (m_result->Status == ER_NOT_IMPLEMENTED)
     {
-        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for SetPowerRequested.");
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetCurrentlyPlayingRequested.");
     }
     else
     {
@@ -868,6 +717,157 @@ void InternetRadioSetPowerRequestedEventArgs::InvokeCompleteHandler()
     }
 }
 
+InternetRadioGetPresetsRequestedEventArgs::InternetRadioGetPresetsRequestedEventArgs(
+    _In_ AllJoynMessageInfo^ info)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info)
+{
+	m_result = InternetRadioGetPresetsResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ InternetRadioGetPresetsRequestedEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioGetPresetsRequestedEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void InternetRadioGetPresetsRequestedEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioGetPresetsRequestedEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioGetPresetsRequestedEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetPresetsRequested.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
+InternetRadioGetPowerRequestedEventArgs::InternetRadioGetPowerRequestedEventArgs(
+    _In_ AllJoynMessageInfo^ info)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info)
+{
+	m_result = InternetRadioGetPowerResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ InternetRadioGetPowerRequestedEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioGetPowerRequestedEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void InternetRadioGetPowerRequestedEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioGetPowerRequestedEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioGetPowerRequestedEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for GetPowerRequested.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
+// Writable Properties
 InternetRadioSetVolumeRequestedEventArgs::InternetRadioSetVolumeRequestedEventArgs(
     _In_ AllJoynMessageInfo^ info,
     _In_ double value)
@@ -938,6 +938,83 @@ void InternetRadioSetVolumeRequestedEventArgs::InvokeCompleteHandler()
     if (m_result->Status == ER_NOT_IMPLEMENTED)
     {
         throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for SetVolumeRequested.");
+    }
+    else
+    {
+        m_tce.set(m_result);
+    }
+}
+
+InternetRadioSetPowerRequestedEventArgs::InternetRadioSetPowerRequestedEventArgs(
+    _In_ AllJoynMessageInfo^ info,
+    _In_ bool value)
+    : m_raised(false),
+    m_completionsRequired(0),
+    m_messageInfo(info),
+    m_value(value)
+{
+	m_result = InternetRadioSetPowerResult::CreateFailureResult(ER_NOT_IMPLEMENTED);
+}
+
+Deferral^ InternetRadioSetPowerRequestedEventArgs::GetDeferral()
+{
+    std::lock_guard<std::mutex> lockGuard(m_lock);
+    if (m_raised)
+    {
+        // Cannot ask for a deferral after the event handler has returned.
+        throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+    }
+
+    m_completionsRequired++;
+    auto handler = ref new DeferralCompletedHandler(this, &InternetRadioSetPowerRequestedEventArgs::Complete);
+    return ref new Deferral(handler);
+}
+
+void InternetRadioSetPowerRequestedEventArgs::InvokeAllFinished()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        m_raised = true;
+        invokeNeeded = (m_completionsRequired == 0);
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioSetPowerRequestedEventArgs::Complete()
+{
+    bool invokeNeeded;
+
+    // We need to hold a lock while modifying private state, but release it before invoking a completion handler.
+    {
+        std::lock_guard<std::mutex> lockGuard(m_lock);
+        if (m_completionsRequired == 0)
+        {
+            // This should never happen since Complete() should only be called by Windows.Foundation.Deferral
+            // which will only invoke our completion handler once.
+            throw Exception::CreateException(E_ILLEGAL_METHOD_CALL);
+        }
+        m_completionsRequired--;
+        invokeNeeded = (m_raised && (m_completionsRequired == 0));
+    }
+
+    if (invokeNeeded)
+    {
+        InvokeCompleteHandler();
+    }
+}
+
+void InternetRadioSetPowerRequestedEventArgs::InvokeCompleteHandler()
+{
+    if (m_result->Status == ER_NOT_IMPLEMENTED)
+    {
+        throw Exception::CreateException(E_NOTIMPL, "No handlers are registered for SetPowerRequested.");
     }
     else
     {

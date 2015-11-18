@@ -24,6 +24,88 @@
 namespace com { namespace microsoft { namespace maker { namespace InternetRadio {
 
 // Methods
+public ref class InternetRadioNextPresetCalledEventArgs sealed
+{
+public:
+    InternetRadioNextPresetCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+    }
+
+    property InternetRadioNextPresetResult^ Result
+    {
+        InternetRadioNextPresetResult^ get() { return m_result; }
+        void set(_In_ InternetRadioNextPresetResult^ value) { m_result = value; }
+    }
+
+    Windows::Foundation::Deferral^ GetDeferral();
+
+    static Windows::Foundation::IAsyncOperation<InternetRadioNextPresetResult^>^ GetResultAsync(InternetRadioNextPresetCalledEventArgs^ args)
+    {
+        args->InvokeAllFinished();
+        auto t = concurrency::create_task(args->m_tce);
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioNextPresetResult^>
+        {
+            return t;
+        });
+    }
+    
+private:
+    void Complete();
+    void InvokeAllFinished();
+    void InvokeCompleteHandler();
+
+    bool m_raised;
+    int m_completionsRequired;
+    concurrency::task_completion_event<InternetRadioNextPresetResult^> m_tce;
+    std::mutex m_lock;
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+    InternetRadioNextPresetResult^ m_result;
+};
+
+public ref class InternetRadioPreviousPresetCalledEventArgs sealed
+{
+public:
+    InternetRadioPreviousPresetCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+    }
+
+    property InternetRadioPreviousPresetResult^ Result
+    {
+        InternetRadioPreviousPresetResult^ get() { return m_result; }
+        void set(_In_ InternetRadioPreviousPresetResult^ value) { m_result = value; }
+    }
+
+    Windows::Foundation::Deferral^ GetDeferral();
+
+    static Windows::Foundation::IAsyncOperation<InternetRadioPreviousPresetResult^>^ GetResultAsync(InternetRadioPreviousPresetCalledEventArgs^ args)
+    {
+        args->InvokeAllFinished();
+        auto t = concurrency::create_task(args->m_tce);
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioPreviousPresetResult^>
+        {
+            return t;
+        });
+    }
+    
+private:
+    void Complete();
+    void InvokeAllFinished();
+    void InvokeCompleteHandler();
+
+    bool m_raised;
+    int m_completionsRequired;
+    concurrency::task_completion_event<InternetRadioPreviousPresetResult^> m_tce;
+    std::mutex m_lock;
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+    InternetRadioPreviousPresetResult^ m_result;
+};
+
 public ref class InternetRadioAddPresetCalledEventArgs sealed
 {
 public:
@@ -77,29 +159,34 @@ private:
     Platform::String^ m_interfaceMemberPresetAddress;
 };
 
-public ref class InternetRadioNextPresetCalledEventArgs sealed
+public ref class InternetRadioRemovePresetCalledEventArgs sealed
 {
 public:
-    InternetRadioNextPresetCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+    InternetRadioRemovePresetCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName);
 
     property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
     {
         Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
     }
 
-    property InternetRadioNextPresetResult^ Result
+    property InternetRadioRemovePresetResult^ Result
     {
-        InternetRadioNextPresetResult^ get() { return m_result; }
-        void set(_In_ InternetRadioNextPresetResult^ value) { m_result = value; }
+        InternetRadioRemovePresetResult^ get() { return m_result; }
+        void set(_In_ InternetRadioRemovePresetResult^ value) { m_result = value; }
+    }
+
+    property Platform::String^ PresetName
+    {
+        Platform::String^ get() { return m_interfaceMemberPresetName; }
     }
 
     Windows::Foundation::Deferral^ GetDeferral();
 
-    static Windows::Foundation::IAsyncOperation<InternetRadioNextPresetResult^>^ GetResultAsync(InternetRadioNextPresetCalledEventArgs^ args)
+    static Windows::Foundation::IAsyncOperation<InternetRadioRemovePresetResult^>^ GetResultAsync(InternetRadioRemovePresetCalledEventArgs^ args)
     {
         args->InvokeAllFinished();
         auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioNextPresetResult^>
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioRemovePresetResult^>
         {
             return t;
         });
@@ -112,10 +199,11 @@ private:
 
     bool m_raised;
     int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioNextPresetResult^> m_tce;
+    concurrency::task_completion_event<InternetRadioRemovePresetResult^> m_tce;
     std::mutex m_lock;
     Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    InternetRadioNextPresetResult^ m_result;
+    InternetRadioRemovePresetResult^ m_result;
+    Platform::String^ m_interfaceMemberPresetName;
 };
 
 public ref class InternetRadioPlayPresetCalledEventArgs sealed
@@ -165,29 +253,34 @@ private:
     Platform::String^ m_interfaceMemberPresetName;
 };
 
-public ref class InternetRadioPreviousPresetCalledEventArgs sealed
+public ref class InternetRadioMakeAnnouncementCalledEventArgs sealed
 {
 public:
-    InternetRadioPreviousPresetCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+    InternetRadioMakeAnnouncementCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberAnnouncementText);
 
     property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
     {
         Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
     }
 
-    property InternetRadioPreviousPresetResult^ Result
+    property InternetRadioMakeAnnouncementResult^ Result
     {
-        InternetRadioPreviousPresetResult^ get() { return m_result; }
-        void set(_In_ InternetRadioPreviousPresetResult^ value) { m_result = value; }
+        InternetRadioMakeAnnouncementResult^ get() { return m_result; }
+        void set(_In_ InternetRadioMakeAnnouncementResult^ value) { m_result = value; }
+    }
+
+    property Platform::String^ AnnouncementText
+    {
+        Platform::String^ get() { return m_interfaceMemberAnnouncementText; }
     }
 
     Windows::Foundation::Deferral^ GetDeferral();
 
-    static Windows::Foundation::IAsyncOperation<InternetRadioPreviousPresetResult^>^ GetResultAsync(InternetRadioPreviousPresetCalledEventArgs^ args)
+    static Windows::Foundation::IAsyncOperation<InternetRadioMakeAnnouncementResult^>^ GetResultAsync(InternetRadioMakeAnnouncementCalledEventArgs^ args)
     {
         args->InvokeAllFinished();
         auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioPreviousPresetResult^>
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioMakeAnnouncementResult^>
         {
             return t;
         });
@@ -200,183 +293,14 @@ private:
 
     bool m_raised;
     int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioPreviousPresetResult^> m_tce;
+    concurrency::task_completion_event<InternetRadioMakeAnnouncementResult^> m_tce;
     std::mutex m_lock;
     Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    InternetRadioPreviousPresetResult^ m_result;
-};
-
-public ref class InternetRadioRemovePresetCalledEventArgs sealed
-{
-public:
-    InternetRadioRemovePresetCalledEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName);
-
-    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
-    {
-        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
-    }
-
-    property InternetRadioRemovePresetResult^ Result
-    {
-        InternetRadioRemovePresetResult^ get() { return m_result; }
-        void set(_In_ InternetRadioRemovePresetResult^ value) { m_result = value; }
-    }
-
-    property Platform::String^ PresetName
-    {
-        Platform::String^ get() { return m_interfaceMemberPresetName; }
-    }
-
-    Windows::Foundation::Deferral^ GetDeferral();
-
-    static Windows::Foundation::IAsyncOperation<InternetRadioRemovePresetResult^>^ GetResultAsync(InternetRadioRemovePresetCalledEventArgs^ args)
-    {
-        args->InvokeAllFinished();
-        auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioRemovePresetResult^>
-        {
-            return t;
-        });
-    }
-    
-private:
-    void Complete();
-    void InvokeAllFinished();
-    void InvokeCompleteHandler();
-
-    bool m_raised;
-    int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioRemovePresetResult^> m_tce;
-    std::mutex m_lock;
-    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    InternetRadioRemovePresetResult^ m_result;
-    Platform::String^ m_interfaceMemberPresetName;
+    InternetRadioMakeAnnouncementResult^ m_result;
+    Platform::String^ m_interfaceMemberAnnouncementText;
 };
 
 // Readable Properties
-public ref class InternetRadioGetCurrentlyPlayingRequestedEventArgs sealed
-{
-public:
-    InternetRadioGetCurrentlyPlayingRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
-
-    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
-    {
-        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
-    }
-
-    property InternetRadioGetCurrentlyPlayingResult^ Result
-    {
-        InternetRadioGetCurrentlyPlayingResult^ get() { return m_result; }
-        void set(_In_ InternetRadioGetCurrentlyPlayingResult^ value) { m_result = value; }
-    }
-
-    Windows::Foundation::Deferral^ GetDeferral();
-
-    static Windows::Foundation::IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ GetResultAsync(InternetRadioGetCurrentlyPlayingRequestedEventArgs^ args)
-    {
-        args->InvokeAllFinished();
-        auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioGetCurrentlyPlayingResult^>
-        {
-            return t;
-        });
-    }
-
-private:
-    void Complete();
-    void InvokeAllFinished();
-    void InvokeCompleteHandler();
-
-    bool m_raised;
-    int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioGetCurrentlyPlayingResult^> m_tce;
-    std::mutex m_lock;
-    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    InternetRadioGetCurrentlyPlayingResult^ m_result;
-};
-
-public ref class InternetRadioGetPowerRequestedEventArgs sealed
-{
-public:
-    InternetRadioGetPowerRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
-
-    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
-    {
-        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
-    }
-
-    property InternetRadioGetPowerResult^ Result
-    {
-        InternetRadioGetPowerResult^ get() { return m_result; }
-        void set(_In_ InternetRadioGetPowerResult^ value) { m_result = value; }
-    }
-
-    Windows::Foundation::Deferral^ GetDeferral();
-
-    static Windows::Foundation::IAsyncOperation<InternetRadioGetPowerResult^>^ GetResultAsync(InternetRadioGetPowerRequestedEventArgs^ args)
-    {
-        args->InvokeAllFinished();
-        auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioGetPowerResult^>
-        {
-            return t;
-        });
-    }
-
-private:
-    void Complete();
-    void InvokeAllFinished();
-    void InvokeCompleteHandler();
-
-    bool m_raised;
-    int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioGetPowerResult^> m_tce;
-    std::mutex m_lock;
-    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    InternetRadioGetPowerResult^ m_result;
-};
-
-public ref class InternetRadioGetPresetsRequestedEventArgs sealed
-{
-public:
-    InternetRadioGetPresetsRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
-
-    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
-    {
-        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
-    }
-
-    property InternetRadioGetPresetsResult^ Result
-    {
-        InternetRadioGetPresetsResult^ get() { return m_result; }
-        void set(_In_ InternetRadioGetPresetsResult^ value) { m_result = value; }
-    }
-
-    Windows::Foundation::Deferral^ GetDeferral();
-
-    static Windows::Foundation::IAsyncOperation<InternetRadioGetPresetsResult^>^ GetResultAsync(InternetRadioGetPresetsRequestedEventArgs^ args)
-    {
-        args->InvokeAllFinished();
-        auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioGetPresetsResult^>
-        {
-            return t;
-        });
-    }
-
-private:
-    void Complete();
-    void InvokeAllFinished();
-    void InvokeCompleteHandler();
-
-    bool m_raised;
-    int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioGetPresetsResult^> m_tce;
-    std::mutex m_lock;
-    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    InternetRadioGetPresetsResult^ m_result;
-};
-
 public ref class InternetRadioGetVersionRequestedEventArgs sealed
 {
 public:
@@ -459,39 +383,33 @@ private:
     InternetRadioGetVolumeResult^ m_result;
 };
 
-// Writable Properties
-public ref class InternetRadioSetPowerRequestedEventArgs sealed
+public ref class InternetRadioGetCurrentlyPlayingRequestedEventArgs sealed
 {
 public:
-    InternetRadioSetPowerRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ bool value);
+    InternetRadioGetCurrentlyPlayingRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
 
     property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
     {
         Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
     }
 
-    property bool Value
+    property InternetRadioGetCurrentlyPlayingResult^ Result
     {
-        bool get() { return m_value; }
+        InternetRadioGetCurrentlyPlayingResult^ get() { return m_result; }
+        void set(_In_ InternetRadioGetCurrentlyPlayingResult^ value) { m_result = value; }
     }
 
-    property InternetRadioSetPowerResult^ Result
-    {
-        InternetRadioSetPowerResult^ get() { return m_result; }
-        void set(_In_ InternetRadioSetPowerResult^ value) { m_result = value; }
-    }
+    Windows::Foundation::Deferral^ GetDeferral();
 
-    static Windows::Foundation::IAsyncOperation<InternetRadioSetPowerResult^>^ GetResultAsync(InternetRadioSetPowerRequestedEventArgs^ args)
+    static Windows::Foundation::IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ GetResultAsync(InternetRadioGetCurrentlyPlayingRequestedEventArgs^ args)
     {
         args->InvokeAllFinished();
         auto t = concurrency::create_task(args->m_tce);
-        return concurrency::create_async([t]() -> concurrency::task<InternetRadioSetPowerResult^>
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioGetCurrentlyPlayingResult^>
         {
             return t;
         });
     }
-
-    Windows::Foundation::Deferral^ GetDeferral();
 
 private:
     void Complete();
@@ -500,13 +418,95 @@ private:
 
     bool m_raised;
     int m_completionsRequired;
-    concurrency::task_completion_event<InternetRadioSetPowerResult^> m_tce;
+    concurrency::task_completion_event<InternetRadioGetCurrentlyPlayingResult^> m_tce;
     std::mutex m_lock;
     Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
-    bool m_value;
-    InternetRadioSetPowerResult^ m_result;
+    InternetRadioGetCurrentlyPlayingResult^ m_result;
 };
 
+public ref class InternetRadioGetPresetsRequestedEventArgs sealed
+{
+public:
+    InternetRadioGetPresetsRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+    }
+
+    property InternetRadioGetPresetsResult^ Result
+    {
+        InternetRadioGetPresetsResult^ get() { return m_result; }
+        void set(_In_ InternetRadioGetPresetsResult^ value) { m_result = value; }
+    }
+
+    Windows::Foundation::Deferral^ GetDeferral();
+
+    static Windows::Foundation::IAsyncOperation<InternetRadioGetPresetsResult^>^ GetResultAsync(InternetRadioGetPresetsRequestedEventArgs^ args)
+    {
+        args->InvokeAllFinished();
+        auto t = concurrency::create_task(args->m_tce);
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioGetPresetsResult^>
+        {
+            return t;
+        });
+    }
+
+private:
+    void Complete();
+    void InvokeAllFinished();
+    void InvokeCompleteHandler();
+
+    bool m_raised;
+    int m_completionsRequired;
+    concurrency::task_completion_event<InternetRadioGetPresetsResult^> m_tce;
+    std::mutex m_lock;
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+    InternetRadioGetPresetsResult^ m_result;
+};
+
+public ref class InternetRadioGetPowerRequestedEventArgs sealed
+{
+public:
+    InternetRadioGetPowerRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info);
+
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+    }
+
+    property InternetRadioGetPowerResult^ Result
+    {
+        InternetRadioGetPowerResult^ get() { return m_result; }
+        void set(_In_ InternetRadioGetPowerResult^ value) { m_result = value; }
+    }
+
+    Windows::Foundation::Deferral^ GetDeferral();
+
+    static Windows::Foundation::IAsyncOperation<InternetRadioGetPowerResult^>^ GetResultAsync(InternetRadioGetPowerRequestedEventArgs^ args)
+    {
+        args->InvokeAllFinished();
+        auto t = concurrency::create_task(args->m_tce);
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioGetPowerResult^>
+        {
+            return t;
+        });
+    }
+
+private:
+    void Complete();
+    void InvokeAllFinished();
+    void InvokeCompleteHandler();
+
+    bool m_raised;
+    int m_completionsRequired;
+    concurrency::task_completion_event<InternetRadioGetPowerResult^> m_tce;
+    std::mutex m_lock;
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+    InternetRadioGetPowerResult^ m_result;
+};
+
+// Writable Properties
 public ref class InternetRadioSetVolumeRequestedEventArgs sealed
 {
 public:
@@ -552,6 +552,53 @@ private:
     Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
     double m_value;
     InternetRadioSetVolumeResult^ m_result;
+};
+
+public ref class InternetRadioSetPowerRequestedEventArgs sealed
+{
+public:
+    InternetRadioSetPowerRequestedEventArgs(_In_ Windows::Devices::AllJoyn::AllJoynMessageInfo^ info, _In_ bool value);
+
+    property Windows::Devices::AllJoyn::AllJoynMessageInfo^ MessageInfo
+    {
+        Windows::Devices::AllJoyn::AllJoynMessageInfo^ get() { return m_messageInfo; }
+    }
+
+    property bool Value
+    {
+        bool get() { return m_value; }
+    }
+
+    property InternetRadioSetPowerResult^ Result
+    {
+        InternetRadioSetPowerResult^ get() { return m_result; }
+        void set(_In_ InternetRadioSetPowerResult^ value) { m_result = value; }
+    }
+
+    static Windows::Foundation::IAsyncOperation<InternetRadioSetPowerResult^>^ GetResultAsync(InternetRadioSetPowerRequestedEventArgs^ args)
+    {
+        args->InvokeAllFinished();
+        auto t = concurrency::create_task(args->m_tce);
+        return concurrency::create_async([t]() -> concurrency::task<InternetRadioSetPowerResult^>
+        {
+            return t;
+        });
+    }
+
+    Windows::Foundation::Deferral^ GetDeferral();
+
+private:
+    void Complete();
+    void InvokeAllFinished();
+    void InvokeCompleteHandler();
+
+    bool m_raised;
+    int m_completionsRequired;
+    concurrency::task_completion_event<InternetRadioSetPowerResult^> m_tce;
+    std::mutex m_lock;
+    Windows::Devices::AllJoyn::AllJoynMessageInfo^ m_messageInfo;
+    bool m_value;
+    InternetRadioSetPowerResult^ m_result;
 };
 
 } } } } 

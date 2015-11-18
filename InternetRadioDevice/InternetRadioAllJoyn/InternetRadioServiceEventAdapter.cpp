@@ -34,113 +34,96 @@ using namespace com::microsoft::maker::InternetRadio;
 // is handled by returning a null result.
 
 // Methods
-IAsyncOperation<InternetRadioAddPresetResult^>^ InternetRadioServiceEventAdapter::AddPresetAsync(_In_ AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName, _In_ Platform::String^ interfaceMemberPresetAddress)
-{
-    auto args = ref new InternetRadioAddPresetCalledEventArgs(info, interfaceMemberPresetName, interfaceMemberPresetAddress);
-    AllJoynHelpers::DispatchEvent([=]() {
-        AddPresetCalled(this, args);
-    });
-    return InternetRadioAddPresetCalledEventArgs::GetResultAsync(args);
-}
-
 IAsyncOperation<InternetRadioNextPresetResult^>^ InternetRadioServiceEventAdapter::NextPresetAsync(_In_ AllJoynMessageInfo^ info)
 {
     auto args = ref new InternetRadioNextPresetCalledEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        NextPresetCalled(this, args);
-    });
+    NextPresetCalled(this, args);
     return InternetRadioNextPresetCalledEventArgs::GetResultAsync(args);
-}
-
-IAsyncOperation<InternetRadioPlayPresetResult^>^ InternetRadioServiceEventAdapter::PlayPresetAsync(_In_ AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName)
-{
-    auto args = ref new InternetRadioPlayPresetCalledEventArgs(info, interfaceMemberPresetName);
-    AllJoynHelpers::DispatchEvent([=]() {
-        PlayPresetCalled(this, args);
-    });
-    return InternetRadioPlayPresetCalledEventArgs::GetResultAsync(args);
 }
 
 IAsyncOperation<InternetRadioPreviousPresetResult^>^ InternetRadioServiceEventAdapter::PreviousPresetAsync(_In_ AllJoynMessageInfo^ info)
 {
     auto args = ref new InternetRadioPreviousPresetCalledEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        PreviousPresetCalled(this, args);
-    });
+    PreviousPresetCalled(this, args);
     return InternetRadioPreviousPresetCalledEventArgs::GetResultAsync(args);
+}
+
+IAsyncOperation<InternetRadioAddPresetResult^>^ InternetRadioServiceEventAdapter::AddPresetAsync(_In_ AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName, _In_ Platform::String^ interfaceMemberPresetAddress)
+{
+    auto args = ref new InternetRadioAddPresetCalledEventArgs(info, interfaceMemberPresetName, interfaceMemberPresetAddress);
+    AddPresetCalled(this, args);
+    return InternetRadioAddPresetCalledEventArgs::GetResultAsync(args);
 }
 
 IAsyncOperation<InternetRadioRemovePresetResult^>^ InternetRadioServiceEventAdapter::RemovePresetAsync(_In_ AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName)
 {
     auto args = ref new InternetRadioRemovePresetCalledEventArgs(info, interfaceMemberPresetName);
-    AllJoynHelpers::DispatchEvent([=]() {
-        RemovePresetCalled(this, args);
-    });
+    RemovePresetCalled(this, args);
     return InternetRadioRemovePresetCalledEventArgs::GetResultAsync(args);
 }
 
+IAsyncOperation<InternetRadioPlayPresetResult^>^ InternetRadioServiceEventAdapter::PlayPresetAsync(_In_ AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberPresetName)
+{
+    auto args = ref new InternetRadioPlayPresetCalledEventArgs(info, interfaceMemberPresetName);
+    PlayPresetCalled(this, args);
+    return InternetRadioPlayPresetCalledEventArgs::GetResultAsync(args);
+}
+
+IAsyncOperation<InternetRadioMakeAnnouncementResult^>^ InternetRadioServiceEventAdapter::MakeAnnouncementAsync(_In_ AllJoynMessageInfo^ info, _In_ Platform::String^ interfaceMemberAnnouncementText)
+{
+    auto args = ref new InternetRadioMakeAnnouncementCalledEventArgs(info, interfaceMemberAnnouncementText);
+    MakeAnnouncementCalled(this, args);
+    return InternetRadioMakeAnnouncementCalledEventArgs::GetResultAsync(args);
+}
+
 // Property Reads
-IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ InternetRadioServiceEventAdapter::GetCurrentlyPlayingAsync(_In_ AllJoynMessageInfo^ info)
-{
-    auto args = ref new InternetRadioGetCurrentlyPlayingRequestedEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        GetCurrentlyPlayingRequested(this, args);
-    });
-    return InternetRadioGetCurrentlyPlayingRequestedEventArgs::GetResultAsync(args);
-}
-
-IAsyncOperation<InternetRadioGetPowerResult^>^ InternetRadioServiceEventAdapter::GetPowerAsync(_In_ AllJoynMessageInfo^ info)
-{
-    auto args = ref new InternetRadioGetPowerRequestedEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        GetPowerRequested(this, args);
-    });
-    return InternetRadioGetPowerRequestedEventArgs::GetResultAsync(args);
-}
-
-IAsyncOperation<InternetRadioGetPresetsResult^>^ InternetRadioServiceEventAdapter::GetPresetsAsync(_In_ AllJoynMessageInfo^ info)
-{
-    auto args = ref new InternetRadioGetPresetsRequestedEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        GetPresetsRequested(this, args);
-    });
-    return InternetRadioGetPresetsRequestedEventArgs::GetResultAsync(args);
-}
-
 IAsyncOperation<InternetRadioGetVersionResult^>^ InternetRadioServiceEventAdapter::GetVersionAsync(_In_ AllJoynMessageInfo^ info)
 {
     auto args = ref new InternetRadioGetVersionRequestedEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        GetVersionRequested(this, args);
-    });
+    GetVersionRequested(this, args);
     return InternetRadioGetVersionRequestedEventArgs::GetResultAsync(args);
 }
 
 IAsyncOperation<InternetRadioGetVolumeResult^>^ InternetRadioServiceEventAdapter::GetVolumeAsync(_In_ AllJoynMessageInfo^ info)
 {
     auto args = ref new InternetRadioGetVolumeRequestedEventArgs(info);
-    AllJoynHelpers::DispatchEvent([=]() {
-        GetVolumeRequested(this, args);
-    });
+    GetVolumeRequested(this, args);
     return InternetRadioGetVolumeRequestedEventArgs::GetResultAsync(args);
 }
 
-// Property Writes
-IAsyncOperation<InternetRadioSetPowerResult^>^ InternetRadioServiceEventAdapter::SetPowerAsync(_In_ AllJoynMessageInfo^ info, _In_ bool value)
+IAsyncOperation<InternetRadioGetCurrentlyPlayingResult^>^ InternetRadioServiceEventAdapter::GetCurrentlyPlayingAsync(_In_ AllJoynMessageInfo^ info)
 {
-    auto args = ref new InternetRadioSetPowerRequestedEventArgs(info, value);
-    AllJoynHelpers::DispatchEvent([=]() {
-        SetPowerRequested(this, args);
-    });
-    return InternetRadioSetPowerRequestedEventArgs::GetResultAsync(args);
+    auto args = ref new InternetRadioGetCurrentlyPlayingRequestedEventArgs(info);
+    GetCurrentlyPlayingRequested(this, args);
+    return InternetRadioGetCurrentlyPlayingRequestedEventArgs::GetResultAsync(args);
 }
 
+IAsyncOperation<InternetRadioGetPresetsResult^>^ InternetRadioServiceEventAdapter::GetPresetsAsync(_In_ AllJoynMessageInfo^ info)
+{
+    auto args = ref new InternetRadioGetPresetsRequestedEventArgs(info);
+    GetPresetsRequested(this, args);
+    return InternetRadioGetPresetsRequestedEventArgs::GetResultAsync(args);
+}
+
+IAsyncOperation<InternetRadioGetPowerResult^>^ InternetRadioServiceEventAdapter::GetPowerAsync(_In_ AllJoynMessageInfo^ info)
+{
+    auto args = ref new InternetRadioGetPowerRequestedEventArgs(info);
+    GetPowerRequested(this, args);
+    return InternetRadioGetPowerRequestedEventArgs::GetResultAsync(args);
+}
+
+// Property Writes
 IAsyncOperation<InternetRadioSetVolumeResult^>^ InternetRadioServiceEventAdapter::SetVolumeAsync(_In_ AllJoynMessageInfo^ info, _In_ double value)
 {
     auto args = ref new InternetRadioSetVolumeRequestedEventArgs(info, value);
-    AllJoynHelpers::DispatchEvent([=]() {
-        SetVolumeRequested(this, args);
-    });
+    SetVolumeRequested(this, args);
     return InternetRadioSetVolumeRequestedEventArgs::GetResultAsync(args);
+}
+
+IAsyncOperation<InternetRadioSetPowerResult^>^ InternetRadioServiceEventAdapter::SetPowerAsync(_In_ AllJoynMessageInfo^ info, _In_ bool value)
+{
+    auto args = ref new InternetRadioSetPowerRequestedEventArgs(info, value);
+    SetPowerRequested(this, args);
+    return InternetRadioSetPowerRequestedEventArgs::GetResultAsync(args);
 }
 

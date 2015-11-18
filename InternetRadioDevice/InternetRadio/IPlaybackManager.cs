@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
+using Windows.Storage.Streams;
 
 namespace InternetRadio
 {
@@ -48,8 +50,14 @@ namespace InternetRadio
         }
 
         Task InitialzeAsync();
+
+        [DefaultOverload]
         void Play(Uri mediaAddress);
+
+        void Play(IRandomAccessStream stream);
+
         void Pause();
+
         void Stop();
     }
 }

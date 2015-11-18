@@ -121,6 +121,8 @@
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnouncementManager.cs" />
+    <Compile Include="IAnnouncementManager.cs" />
     <Compile Include="Interfaces\AllJoyn\AllJoynInterfaceManager.cs" />
     <Compile Include="AsyncHelpers.cs" />
     <Compile Include="Config.cs" />
@@ -129,8 +131,10 @@
     <Compile Include="Interfaces\Http\NavConstants.cs" />
     <Compile Include="Interfaces\Http\WebHelper.cs" />
     <Compile Include="Interfaces\Http\WebServer.cs" />
+    <Compile Include="Interfaces\Winrt\WinRtInterfaceManager.cs" />
     <Compile Include="IPlaybackManager.cs" />
     <Compile Include="IPlaylistManager.cs" />
+    <Compile Include="Interfaces\Winrt\IInternetRadio.cs" />
     <Compile Include="MediaEnginePlaybackManager.cs" />
     <Compile Include="Playlist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -186,7 +190,7 @@
       <Name>UniversalMediaEngine</Name>
     </ProjectReference>
     <ProjectReference Include="..\InternetRadioAllJoyn\InternetRadioAllJoyn.vcxproj">
-      <Project>{5daf0d4c-ef4f-4e20-8877-db2aaeb89bbd}</Project>
+      <Project>{26d27cac-4bcc-40c4-bce1-2db357ae87b3}</Project>
       <Name>InternetRadioAllJoyn</Name>
     </ProjectReference>
   </ItemGroup>

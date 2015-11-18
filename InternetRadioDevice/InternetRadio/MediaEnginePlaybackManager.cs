@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 
 namespace InternetRadio
 {
@@ -99,6 +100,11 @@ namespace InternetRadio
         {
             var addressString = mediaAddress.ToString();
             this.mediaEngine.Play(addressString);
+        }
+
+        public void Play(IRandomAccessStream stream)
+        {
+            this.mediaEngine.PlayStream(stream);
         }
 
         public void Pause()
